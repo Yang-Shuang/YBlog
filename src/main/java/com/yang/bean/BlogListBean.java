@@ -1,6 +1,9 @@
 package com.yang.bean;
 
 import com.yang.base.BaseBean;
+import com.yang.entity.BlogArticleEntity;
+
+import java.util.ArrayList;
 
 /**
  * Created by YangShuang
@@ -8,15 +11,15 @@ import com.yang.base.BaseBean;
  */
 public class BlogListBean extends BaseBean{
 
-    private String time;
 
-    public String getTime() {
-        return time;
+    private ArrayList<BlogArticleEntity> list;
+
+    public ArrayList<BlogArticleEntity> getList() {
+        return list;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setList(ArrayList<BlogArticleEntity> list) {
+        this.list = list;
     }
-
 
 }
