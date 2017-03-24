@@ -1,8 +1,13 @@
 package com.yang.servlet;
 
+import com.yang.base.BaseBean;
 import com.yang.base.BaseServlet;
 import com.yang.operation.BaseOperation;
+import com.yang.utils.CommonConfig;
+import com.yang.utils.UrlConfig;
+import net.sf.json.JSONObject;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,10 +20,11 @@ import java.io.PrintWriter;
  */
 public class HomeServlet extends BaseServlet{
 
-    private static final int CODE_SUCCESS = 101;
-    private static final int CODE_CLASS_NOT_FOUND = 102;
-
-
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        UrlConfig.initUrlMap();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,23 +35,20 @@ public class HomeServlet extends BaseServlet{
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req,resp);
+        operation(req,resp);
     }
 
     private void operation(HttpServletRequest request,HttpServletResponse response){
-        String requestMethod = request.getServletPath().substring(1,request.getServletPath().length());
-
-        String className = BaseOperation.class.getPackage()+"."+ requestMethod.substring(0,1).toUpperCase() + requestMethod.substring(1)+"Operation";
+        String requestMethod = request.getRequestURI();
 
         try {
-            Class<BaseOperation> operationClass = (Class<BaseOperation>) Class.forName(className);
-            BaseOperation operation = operationClass.newInstance();
+            Class c = UrlConfig.mUrlMap.get(requestMethod);
+            if(c == null)returnNoClassFound(response);
+            BaseOperation operation = (BaseOperation) UrlConfig.mUrlMap.get(requestMethod).newInstance();
             operation.operation(request,response);
-        } catch (ClassNotFoundException e) {
+        } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
             e.printStackTrace();
         }
     }
@@ -53,7 +56,8 @@ public class HomeServlet extends BaseServlet{
     private void returnNoClassFound(HttpServletResponse response){
         try {
             PrintWriter writer = setJsonContentType(response).getWriter();
-            writer.print("");
+            BaseBean baseBean = new BaseBean(CommonConfig.CODE.ERROR_NO_CLASS,CommonConfig.MSG.ERROR_NO_CLASS);
+            writer.print(JSONObject.fromObject(baseBean).toString());
             writer.flush();
             writer.close();
         } catch (IOException e) {

@@ -8,9 +8,10 @@
   <servlet>
     <servlet-name>HomeServlet</servlet-name>
     <servlet-class>com.yang.servlet.HomeServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>HomeServlet</servlet-name>
-    <url-pattern>*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 </web-app>

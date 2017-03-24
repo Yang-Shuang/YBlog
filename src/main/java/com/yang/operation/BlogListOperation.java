@@ -1,6 +1,7 @@
 package com.yang.operation;
 
-import com.yang.utils.UrlInfomation;
+import com.yang.bean.BlogListBean;
+import com.yang.utils.CommonConfig;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,9 +12,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 
-@UrlInfomation(URL = "getBlogList")
 public class BlogListOperation extends BaseOperation{
+
     public void operation(HttpServletRequest request, HttpServletResponse response) {
 
+        BlogListBean blogListBean = new BlogListBean();
+        blogListBean.setErrorCode(CommonConfig.CODE.SUCCESS);
+        blogListBean.setErrorMsg(CommonConfig.MSG.SUCCESS);
+        blogListBean.setTime(""+System.currentTimeMillis());
+
+        returnThisMsg(response,blogListBean);
     }
 }

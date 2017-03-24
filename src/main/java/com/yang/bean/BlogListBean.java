@@ -9,7 +9,6 @@ import com.yang.base.BaseBean;
 public class BlogListBean extends BaseBean{
 
     private String time;
-    private String a;
 
     public String getTime() {
         return time;
@@ -19,11 +18,5 @@ public class BlogListBean extends BaseBean{
         this.time = time;
     }
 
-    public String getA() {
-        return a;
-    }
 
-    public void setA(String a) {
-        this.a = a;
-    }
 }
