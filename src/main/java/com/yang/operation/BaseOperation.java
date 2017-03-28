@@ -20,7 +20,7 @@ public abstract class BaseOperation {
    public abstract void operation(HttpServletRequest request, HttpServletResponse response);
 
    protected void returnThisMsg(HttpServletResponse response, BaseBean baseBean){
-      response.setContentType("text/javascript");
+      response.setContentType("text/plain;charset=utf-8");
       try {
          PrintWriter writer = response.getWriter();
          writer.print(JSONObject.fromObject(baseBean).toString());

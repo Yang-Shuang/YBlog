@@ -1,5 +1,6 @@
 package com.yang.operation;
 
+import com.yang.base.TestDataServer;
 import com.yang.bean.BlogListBean;
 import com.yang.entity.BlogArticleEntity;
 import com.yang.utils.CommonConfig;
@@ -22,15 +23,11 @@ public class BlogListOperation extends BaseOperation{
         BlogListBean blogListBean = new BlogListBean();
         blogListBean.setErrorCode(CommonConfig.CODE.SUCCESS);
         blogListBean.setErrorMsg(CommonConfig.MSG.SUCCESS);
-        BlogArticleEntity b = new BlogArticleEntity();
-        b.setArticleId("46413611");
-        b.setArticleTime("2015-06-08 15:43");
-        b.setArticleTitle("Java泛型 类型变量的限定");
-        b.setArticleContent("");
-        ArrayList<BlogArticleEntity> blogListBeans = new ArrayList<BlogArticleEntity>();
-        blogListBeans.add(b);
-        blogListBean.setList(blogListBeans);
 
+        ArrayList<BlogArticleEntity> blogListBeans = TestDataServer.getBlogListData(20);
+
+        blogListBean.setList(blogListBeans);
+        response.setHeader("s","s1");
         returnThisMsg(response,blogListBean);
     }
 }

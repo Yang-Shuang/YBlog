@@ -27,6 +27,11 @@ public class HomeServlet extends BaseServlet{
     }
 
     @Override
+    protected void doHead(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doHead(req, resp);
+    }
+
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         operation(req,resp);
