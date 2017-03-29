@@ -1,18 +1,19 @@
 package com.yang.servlet;
 
-import com.yang.base.BaseBean;
 import com.yang.base.BaseServlet;
 import com.yang.operation.BaseOperation;
 import com.yang.utils.CommonConfig;
+import com.yang.utils.ResponseUtils;
 import com.yang.utils.UrlConfig;
-import net.sf.json.JSONObject;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.Map;
 
 /**
  * Created by YangShuang
@@ -27,19 +28,16 @@ public class HomeServlet extends BaseServlet{
     }
 
     @Override
-    protected void doHead(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doHead(req, resp);
-    }
-
-    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        operation(req,resp);
+        ResponseUtils.sendErrorMsgJson(resp,CommonConfig.CODE.ERROR_UNSUPPORT_METHOD,CommonConfig.MSG.ERROR_UNSUPPORT_METHOD);
 
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        System.out.println(getContent(req));
         operation(req,resp);
     }
 
@@ -48,7 +46,7 @@ public class HomeServlet extends BaseServlet{
 
         try {
             Class c = UrlConfig.mUrlMap.get(requestMethod);
-            if(c == null)returnNoClassFound(response);
+            if(c == null) ResponseUtils.sendErrorMsgJson(response,CommonConfig.CODE.ERROR_NO_CLASS,CommonConfig.MSG.ERROR_NO_CLASS);
             BaseOperation operation = (BaseOperation) UrlConfig.mUrlMap.get(requestMethod).newInstance();
             operation.operation(request,response);
         } catch (InstantiationException e) {
@@ -58,20 +56,19 @@ public class HomeServlet extends BaseServlet{
         }
     }
 
-    private void returnNoClassFound(HttpServletResponse response){
+    private String getContent(HttpServletRequest request){
+        StringBuffer jb = new StringBuffer();
+        String line = null;
         try {
-            PrintWriter writer = setJsonContentType(response).getWriter();
-            BaseBean baseBean = new BaseBean(CommonConfig.CODE.ERROR_NO_CLASS,CommonConfig.MSG.ERROR_NO_CLASS);
-            writer.print(JSONObject.fromObject(baseBean).toString());
-            writer.flush();
-            writer.close();
+            BufferedReader reader = request.getReader();
+            while ((line = reader.readLine()) != null)
+                jb.append(line);
+            reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return jb.toString();
     }
 
-    private HttpServletResponse setJsonContentType(HttpServletResponse response){
-        response.setContentType("text/javascript");
-        return response;
-    }
+
 }
